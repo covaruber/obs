@@ -8,7 +8,7 @@ Authors@R: c(
 	)
 Maintainer: Giovanny Covarrubias-Pazaran <cova_ruber@live.com.mx>
 Description: Runs specific breeding scheme questions using the 'AlphaSimR' machinery <doi:10.1093/g3journal/jkaa017> and the coalescent simulator 'MaCS' <doi:10.1101/gr.083634.108>.
-Depends: R(>= 3.5.0), AlphaSimR (>= 1.4.2), Matrix (>= 1.0), bWGR, dplyr, ggplot2
+Depends: R(>= 3.5.0), AlphaSimR (>= 1.4.2), Matrix (>= 1.0), bWGR, ggplot2, crayon
 LazyLoad: yes
 LazyData: yes
 License: GPL (>= 2)

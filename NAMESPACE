@@ -2,7 +2,6 @@
   
 import("AlphaSimR")
 import("Matrix")
-import("dplyr")
 import("bWGR")
 import("ggplot2")
 
