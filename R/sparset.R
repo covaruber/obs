@@ -1,4 +1,8 @@
-sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf, nCrosses=30, nProgeny=10, G=NULL, h2=0.5, p=0.1, nItersMacs=10, nItersTrt=5){
+sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
+                    nCrosses=30, nProgeny=10, 
+                    G=NULL, h2=0.5, p=0.1, 
+                    nItersMacs=10, nItersTrt=5,
+                    verbose=TRUE){
   
   if(missing(gridEnvs)){stop("Please provide a grid of number of environments to test", call. = FALSE)}
   if(missing(gridEnvs)){stop("Please provide a grid of number of individuals per environment to test", call. = FALSE)}
@@ -156,8 +160,9 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf, nCrosses=30, nProgen
         
       }
       
-      message(paste("Macs rep",iMacs,"with treatment",trts[iTrt,"Var1"], "envs and",trts[iTrt,"Var2"] ,"inds per env completed."))
-      
+      if(verbose){
+        message(paste("Macs rep",iMacs,"with treatment",trts[iTrt,"Var1"], "envs and",trts[iTrt,"Var2"] ,"inds per env completed."))
+      }
     }
     
   }

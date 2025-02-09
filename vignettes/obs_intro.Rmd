@@ -1,10 +1,10 @@
 ---
-title: "Library of Optimized Breeding Schemes"
+title: "Optimized Breeding Schemes"
 author: "Giovanny Covarrubias-Pazaran"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Library of Optimized Breeding Schemes}
+  %\VignetteIndexEntry{Optimized Breeding Schemes}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,20 +21,38 @@ Because of CRAN requirements I will only run few generations but please when you
 ### 1) Optimizing the number of environments and progeny tested per environment
 
 ```{r setup, include=FALSE} 
-library(lobs)
+library(obs)
 ```
 
 ```{r}
-res <- sparset(gridEnvs = seq(5,15,5), gridInds = seq(10,300,30), 
-               nCrosses=50, nProgeny=20, nIters = 10 )
-plot.sparsetMod(res)
+# define the TPE complexity
+G = simGECorMat0(nEnv =300,nMegaEnv = 1,mu=0.2, v=0.2)
+hist(G[lower.tri(G)])
+
+# fit the simulations
+res <- sparset( 
+  # define grids to explore
+  gridEnvs =  seq(5,15,5), gridIndsPerEnv = seq(100,300,100), 
+  # define constraints in plots
+  lb=0, ub=Inf, 
+  # define population structure parameters
+  nCrosses = 30, nProgeny = 10,
+  # define TPE structure parameters
+  G=NULL, h2=0.15, p=0.1,
+  # define replications for the simulations
+  nItersMacs = 5, nItersTrt = 5 , verbose=FALSE
+)
+
+plot.sparsetMod(res) # see expected gain from each scenario
+plot.sparsetMod(res, y="accuracy") # what is the accuracy of each scenario
+
 ```
 
 You can observe how using very few entries in few environments does not provide a good accuracy. At about 120 individuals the accuracy stabilizes and going beyond that doesn't seem to pay off.There seems to be a big room for improvement when the number of environments goes from 5 to 10.
 
 ## Literature
 
-Giovanny Covarrubias-Pazaran (2025).  lobs: a library of optimized breeding schemes questions. To be submitted to Bioinformatics.
+Giovanny Covarrubias-Pazaran (2025).  obs: a library of optimized breeding schemes questions. To be submitted to Bioinformatics.
 
 Gaynor, R. Chris, Gregor Gorjanc, and John M. Hickey. 2021. AlphaSimR: an R package for breeding program simulations. G3 Gene|Genomes|Genetics 11(2):jkaa017. https://doi.org/10.1093/g3journal/jkaa017.
 

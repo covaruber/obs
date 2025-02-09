@@ -13,7 +13,8 @@ different sparse testing designs to tacke a specified target population of envir
 sparset(gridEnvs, gridIndsPerEnv, lb=10, ub=Inf, 
         nCrosses=30, nProgeny=10, 
         G=NULL, h2=0.5, p=0.1,
-        nItersMacs=10, nItersTrt=5)
+        nItersMacs=10, nItersTrt=5,
+        verbose=TRUE)
 
 }
 
@@ -51,6 +52,9 @@ A scalar value defining the number of coalescent simulations to use. We recommen
 }
   \item{nItersTrt}{
 A scalar value defining the number of different randomizations to use when running the sparse testing. We recommend to set this to a value between 5 and 10.
+}
+  \item{verbose}{
+A logical value indicating if messages should be printed.
 }
 
 }
