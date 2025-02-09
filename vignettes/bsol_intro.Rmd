@@ -1,0 +1,41 @@
+---
+title: "Library of Optimized Breeding Schemes"
+author: "Giovanny Covarrubias-Pazaran"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Library of Optimized Breeding Schemes}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The lobs package is nice wrapper of the AlphaSimR package that enables to ask specific breeding scheme optimization questions.
+
+The vignettes aim to provide several examples in how to use the lobs package under different optimization scenarios. We will spend the rest of the space providing examples for: 
+
+1) Optimizing the number of environments and progeny tested per environment
+2) ...
+
+Because of CRAN requirements I will only run few generations but please when you run your analysis let it run for many generations.
+
+### 1) Optimizing the number of environments and progeny tested per environment
+
+```{r setup, include=FALSE} 
+library(lobs)
+```
+
+```{r}
+res <- sparset(gridEnvs = seq(5,15,5), gridInds = seq(10,300,30), 
+               nCrosses=50, nProgeny=20, nIters = 10 )
+plot.sparsetMod(res)
+```
+
+You can observe how using very few entries in few environments does not provide a good accuracy. At about 120 individuals the accuracy stabilizes and going beyond that doesn't seem to pay off.There seems to be a big room for improvement when the number of environments goes from 5 to 10.
+
+## Literature
+
+Giovanny Covarrubias-Pazaran (2025).  lobs: a library of optimized breeding schemes questions. To be submitted to Bioinformatics.
+
+Gaynor, R. Chris, Gregor Gorjanc, and John M. Hickey. 2021. AlphaSimR: an R package for breeding program simulations. G3 Gene|Genomes|Genetics 11(2):jkaa017. https://doi.org/10.1093/g3journal/jkaa017.
+
+Chen GK, Marjoram P, Wall JD (2009). Fast and Flexible Simulation of DNA Sequence Data. Genome Research, 19, 136-142.

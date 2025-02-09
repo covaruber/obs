@@ -1,0 +1,22 @@
+Package: obs
+Version: 1.0.1
+Date: 2025-04-01
+Title: Optimized Breeding Schemes
+Authors@R: c(
+    person("Giovanny","Covarrubias-Pazaran", email="cova_ruber@live.com.mx", role=c("aut","cre"),
+	comment=c(ORCID="0000-0002-7194-3837"))
+	)
+Maintainer: Giovanny Covarrubias-Pazaran <cova_ruber@live.com.mx>
+Description: Runs specific breeding scheme questions using the 'AlphaSimR' machinery <doi:10.1093/g3journal/jkaa017> and the coalescent simulator 'MaCS' <doi:10.1101/gr.083634.108>.
+Depends: R(>= 3.5.0), AlphaSimR (>= 1.4.2), Matrix (>= 1.0), bWGR, dplyr, ggplot2
+LazyLoad: yes
+LazyData: yes
+License: GPL (>= 2)
+NeedsCompilation: yes
+Author: Giovanny Covarrubias-Pazaran [aut, cre] (<https://orcid.org/0000-0002-7194-3837>)
+Repository: CRAN
+Suggests: 
+    rmarkdown,
+    knitr
+VignetteBuilder: knitr
+Config/testthat/edition: 3

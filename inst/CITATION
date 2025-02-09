@@ -1,0 +1,11 @@
+
+bibentry(
+   bibtype = "Article",
+   title = "obs: a library of breeding scheme questions.",
+   author = as.person("Covarrubias-Pazaran Giovanny"),
+   journal="TBS",
+	year=2024,
+	volume="N",
+	pages="start-end"
+     )
+
