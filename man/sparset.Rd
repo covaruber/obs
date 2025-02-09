@@ -101,7 +101,7 @@ Chen GK, Marjoram P, Wall JD (2009). Fast and Flexible Simulation of DNA Sequenc
 \examples{
 
 # define the TPE complexity
-G = simGECorMat(nEnv =300,nMegaEnv = 1,mu=0.2, v=0.2)
+G = simGECorMat0(nEnv =300,nMegaEnv = 1,mu=0.2, v=0.2)
 hist(G[lower.tri(G)])
 
  \donttest{
@@ -117,7 +117,7 @@ res <- sparset(
   # define TPE structure parameters
   G=NULL, h2=0.15, p=0.1,
   # define replications for the simulations
-  nItersTrt = 5, nItersMacs = 5
+  nItersMacs = 5, nItersTrt = 5 
 )
 
 plot.sparsetMod(res) # see expected gain from each scenario

@@ -45,7 +45,7 @@
 
 
 # define the TPE complexity
-G = simGECorMat(nEnv =100,nMegaEnv = 1,mu=0.2, v=0.2)
+G = simGECorMat0(nEnv =100,nMegaEnv = 1,mu=0.2, v=0.2)
 hist(G[lower.tri(G)])
 
 # fit the simulations
@@ -59,7 +59,7 @@ res <- sparset(
   # define TPE structure parameters
   G=NULL, h2=0.15,
   # define replications for the simulations
-  nItersTrt = 5, nItersMacs = 5
+  nItersMacs = 5, nItersTrt = 5
 )
 
 plot.sparsetMod(res) # see expected gain from each scenario
