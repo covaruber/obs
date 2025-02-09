@@ -19,7 +19,7 @@ questions that can be optimized are:
 \strong{Sparse testing}: with the \code{\link{sparset}} function which creates
 sparse testing scenarios under different target population of environments for 
 a given population structure and returns the expected accuracies and expected
-genetic gains (influenced by sselection intensities) under the different designs.
+genetic gains (influenced by selection intensities) under the different designs.
 
 }
 
