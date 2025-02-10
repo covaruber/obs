@@ -120,6 +120,7 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
         sampledEnvs <- sampledEnvsList[[iTrt]]
         X <- Matrix(0, nrow=nrow(pop@gv), ncol=ncol(pop@gv)); rownames(X) <- pop@id
         availableInds <- sample(1:nrow(X), trts[iTrt,"availableInds"])
+        availableIndsNames <- rownames(X)[availableInds]
         for(iEnv in sampledEnvs){
           
           picked <- sample(availableInds,trts[iTrt,"nIndsPerFarm"] )
@@ -155,15 +156,14 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
           common <- intersect(names(trueGV) , rownames(sparseGV)) # currently sommer doesn't complete the matrix, I'll work on it
           rt <- cor(trueGV[common],sparseGV[common,])
           # calculate realized gain
+          v <- rownames(sparseGV)
           sparseGV <- as.data.frame(sparseGV)
+          rownames(sparseGV) <- v # make sure the rownames are correct
+          sparseGV <- sparseGV[availableIndsNames,,drop=FALSE] # subset to individuals that really are there
           sparseGV <- sparseGV[with(sparseGV, order(-V1)),,drop=FALSE ]
           
-          # sparseGV <- sparseGV[ order(sparseGV[,1] ), ]
-          
+          # print(rownames(sparseGV)[1:(round(nInd(pop)*p))])
           expGain <- mean( trueGV[ rownames(sparseGV)[1:(round(nInd(pop)*p))] ] ) - mean(trueGV)
-          # popSel <- selectInd(pop, nInd = round(nInd(pop)*p), trait= function(Y,b){return(b)},  simParam = SP, b=sparseGV )
-          # popS1 <- randCross(popSel, nCrosses = nCrosses, nProgeny = nProgeny)
-          # realizedGain <- mean(apply(popS1@gv,1,mean)) - mean(trueGV)
           
         }else{rt <- expGain <- NA}
         # save results in new data.frame
