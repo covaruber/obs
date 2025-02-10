@@ -58,7 +58,7 @@ I'll be glad to help or answer any question. I have spent a valuable amount of t
 }
 \references{
 
-Giovanny Covarrubias-Pazaran (2024).  obs: a simple evolutionary algorithm for complex problems. To be submitted to Bioinformatics.
+Giovanny Covarrubias-Pazaran, Dorcus Gemenet, Christian Werner, Marlee Labroo  (2025).  obs: a simple evolutionary algorithm for complex problems. To be submitted to Bioinformatics.
 
 Gaynor, R. Chris, Gregor Gorjanc, and John M. Hickey. 2021. AlphaSimR: an R package for breeding program simulations. G3 Gene|Genomes|Genetics 11(2):jkaa017. https://doi.org/10.1093/g3journal/jkaa017.
 

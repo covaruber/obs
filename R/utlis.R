@@ -10,7 +10,7 @@
   if(interactive()) {
     packageStartupMessage(blue(paste("[]==================================================================[]")),appendLF=TRUE)
     packageStartupMessage(blue(paste("[] Optimized Breeding Schemes  (obs) 1.0.1 (2025-03)                []",sep="")),appendLF=TRUE)
-    packageStartupMessage(paste0(blue("[] Author: Giovanny Covarrubias-Pazaran",paste0(bgGreen(white(" ")), bgWhite(magenta("*")), bgRed(white(" "))),"                        []")),appendLF=TRUE)
+    packageStartupMessage(paste0(blue("[] Authors: Covarrubias-Pazaran, Gemenet, Werner, Labroo","           []")),appendLF=TRUE)
     packageStartupMessage(blue("[] Dedicated to the CGIAR, BMGF and USAID.                          []"),appendLF=TRUE)
     packageStartupMessage(blue("[] Type 'vignette('lobs.intro')' for a short tutorial               []"),appendLF=TRUE)
     packageStartupMessage(blue(paste("[]==================================================================[]")),appendLF=TRUE)

@@ -4,7 +4,12 @@ Date: 2025-04-01
 Title: Optimized Breeding Schemes
 Authors@R: c(
     person("Giovanny","Covarrubias-Pazaran", email="cova_ruber@live.com.mx", role=c("aut","cre"),
-	comment=c(ORCID="0000-0002-7194-3837"))
+	comment=c(ORCID="0000-0002-7194-3837")),
+	person("Dorcus Gemenet", email="gemenet2014@gmail.com", role=c("aut"),
+	comment=c(ORCID="0000-0003-4901-1694")),
+	person("Christian Werner", email="c.werner@cgiar.org", role=c("aut"),
+	comment=c(ORCID="0000-0001-9400-5061")),
+	person("Marlee Labroo", email="dulynoted713@gmail.com", role=c("aut") )
 	)
 Maintainer: Giovanny Covarrubias-Pazaran <cova_ruber@live.com.mx>
 Description: Runs specific breeding scheme questions using the 'AlphaSimR' machinery <doi:10.1093/g3journal/jkaa017> and the coalescent simulator 'MaCS' <doi:10.1101/gr.083634.108>.

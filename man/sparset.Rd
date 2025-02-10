@@ -105,7 +105,7 @@ from those trials is assumed to be harvested at a certain \code{h2} value. This 
 
 \references{
 
-Giovanny Covarrubias-Pazaran (2025).  obs: a library of optimized breeding schemes questions. To be submitted to Bioinformatics.
+Giovanny Covarrubias-Pazaran, Dorcus Gemenet, Christian Werner, Marlee Labroo (2025).  obs: a library of optimized breeding schemes questions. To be submitted to Bioinformatics.
 
 Gaynor, R. Chris, Gregor Gorjanc, and John M. Hickey. 2021. AlphaSimR: an R package for breeding program simulations. G3 Gene|Genomes|Genetics 11(2):jkaa017. https://doi.org/10.1093/g3journal/jkaa017.
 
