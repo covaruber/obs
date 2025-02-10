@@ -1,6 +1,6 @@
 ##' @importFrom stats update
 ##' @S3method update evolaMod
-plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="overlapMu", ...) {
+plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="nIndsPerFarm", ...) {
   # if (is.null(call <- getCall(object))){stop("object should contain a 'call' component")}
   # call <- getCall(object)
   if(!inherits(object,"sparsetMod")){stop("not an object of class sparsetMod")}
@@ -11,7 +11,7 @@ plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="
   
   object$propMaxPlot <- round( (object$nPlots / max(object$nPlots))*100, 0)
   object$propMaxInds <- round( (object$nIndsAvail / max(object$nIndsAvail))*100, 0)
-  object$trt <- paste( addZeros(object$nIndsAvail),"i_", addZeros(object$nPlots ) , "p ")#,  object$propMaxInds,"% ;", object$propMaxPlot ,"%)", sep="")
+  object$trt <- paste0( addZeros(object$nIndsAvail),"ia_",  addZeros(object$nIndsPerFarm),"ipf_" , addZeros(object$nPlots ) , "pt ")#,  object$propMaxInds,"% ;", object$propMaxPlot ,"%)", sep="")
   
   object$colorBy <- object[,color]
   # make sure we color by averages
@@ -20,7 +20,7 @@ plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="
   }
   
   object$yVar <- object[,y]
-  myYint <- max(object[,y])
+  myYint <- mean(object[,y])
   
   p <- ggplot(object, aes(x=factor(trt), y=yVar, fill=colorBy) )
   if(box){
@@ -41,7 +41,7 @@ plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="
                                                            barheight = 25, title.position = "bottom", 
                                                            title.hjust = 0.5)) +
     geom_hline(yintercept=myYint, linetype='dashed', color=c('red')) +
-    xlab("#Inds_#plots ") + 
+    xlab("#Inds available _ #Inds per farm _ #Plots total") + 
     ylab(myYlab) +
     labs(fill = color ) +
     scale_fill_gradient(low="forestgreen", high="red") 

@@ -22,7 +22,7 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
       mutRate = 2.5e-08, # 2.5 point mutations per 100 million bp. In a 1 billion bp would be 25 mutations. Natural units are: per base pair per cell division, per gene per generation, or per genome per generation
       histNe = c(500, 1500, 6000, 12000, 1e+05), # effective population size in previous generations
       histGen = c(100, 1000, 10000, 1e+05, 1e+06), # number of generations ago for effective population sizes given in histNe
-      inbred = TRUE, # outbred or inbred
+      inbred = FALSE, # outbred or inbred
       split = NULL,  ploidy = 2L,  returnCommand = FALSE,  nThreads = NULL
     )
     if(is.null(G)){
@@ -39,7 +39,7 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
     suppressWarnings(
       SP$addTraitAD(
         nQtlPerChr=40, # number of QTLs per chromosome. Can be a single value or nChr values.
-        mean = abs(rnorm(nEnvs, 11, 4)), # a vector of desired mean genetic values for one or more traits
+        mean = rep(0,nEnvs), # a vector of desired mean genetic values for one or more traits
         # mean = rep(0,nEnvs), # a vector of desired mean genetic values for one or more traits
         var = rep(1,nEnvs), # a vector of desired genetic variances for one or more traits
         meanDD = rep(0,nEnvs), # mean dominance degree
@@ -156,14 +156,19 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
           common <- intersect(names(trueGV) , rownames(sparseGV)) # currently sommer doesn't complete the matrix, I'll work on it
           rt <- cor(trueGV[common],sparseGV[common,])
           # calculate realized gain
+          
+          nIndsSelected <- round(min(trts$availableInds)*p)
+          
           v <- rownames(sparseGV)
           sparseGV <- as.data.frame(sparseGV)
           rownames(sparseGV) <- v # make sure the rownames are correct
           sparseGV <- sparseGV[availableIndsNames,,drop=FALSE] # subset to individuals that really are there
           sparseGV <- sparseGV[with(sparseGV, order(-V1)),,drop=FALSE ]
+          expGain <- mean( trueGV[ rownames(sparseGV)[1:nIndsSelected] ] ) - mean(trueGV)
           
-          # print(rownames(sparseGV)[1:(round(nInd(pop)*p))])
-          expGain <- mean( trueGV[ rownames(sparseGV)[1:(round(nInd(pop)*p))] ] ) - mean(trueGV)
+          # popSel <- selectInd(pop[which(pop@id%in%availableIndsNames)], nInd = nIndsSelected, trait = function(Y,b){b}, b=sparseGV[availableIndsNames,,drop=FALSE])
+          # popS1 <- randCross(popSel, nCrosses = nCrosses, nProgeny = nProgeny)
+          # expGain <- mean(apply(popS1@gv,1,mean))
           
         }else{rt <- expGain <- NA}
         # save results in new data.frame
