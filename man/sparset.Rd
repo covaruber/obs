@@ -13,7 +13,7 @@ different sparse testing designs to tacke a specified target population of envir
 sparset(gridEnvs, gridIndsPerEnv, lb=10, ub=Inf, 
         nCrosses=30, nProgeny=10, 
         G=NULL, h2=0.5, p=0.1,
-        nItersMacs=10, nItersTrt=5,
+        nItersMacs=10, nItersTrt=5, trts=NULL,
         verbose=TRUE)
 
 }
@@ -52,6 +52,17 @@ A scalar value defining the number of coalescent simulations to use. We recommen
 }
   \item{nItersTrt}{
 A scalar value defining the number of different randomizations to use when running the sparse testing. We recommend to set this to a value between 5 and 10.
+}
+  \item{trts}{
+An optional data frame with the treatments to be simulated. It should have 4 columns:
+
+'nFarms' 'nIndsPerFarm' 'total' 'availableInds'
+
+where each row represents a combination of how many farms will be sampled, how many
+individuals should be grown in each farm, the total number of units (just the product 
+of these 2 columns), and how many individuals from the entire population (given by
+nCrosses*nProgeny arguments) should be available for the sampling process.
+
 }
   \item{verbose}{
 A logical value indicating if messages should be printed.
