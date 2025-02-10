@@ -113,13 +113,13 @@ hist(G[lower.tri(G)])
 # fit the simulations
 res <- sparset( 
   # define grids to explore
-  gridEnvs =  seq(5,30,5), gridIndsPerEnv = seq(100,300,50), 
+  gridEnvs =  seq(5,15,5), gridIndsPerEnv = seq(100,200,50), 
   # define constraints in plots
   lb=0, ub=Inf, 
   # define population structure parameters
   nCrosses = 30, nProgeny = 10,
   # define TPE structure parameters
-  G=NULL, h2=0.15, p=0.1,
+  G=G, h2=0.15, p=0.1,
   # define replications for the simulations
   nItersMacs = 5, nItersTrt = 5 
 )

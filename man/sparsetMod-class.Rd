@@ -57,7 +57,7 @@ res <- sparset(
   # define population structure parameters
   nCrosses = 30, nProgeny = 10,
   # define TPE structure parameters
-  G=NULL, h2=0.15,
+  G=G, h2=0.15,
   # define replications for the simulations
   nItersMacs = 5, nItersTrt = 5
 )

@@ -1,11 +1,12 @@
 sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
                     nCrosses=30, nProgeny=10, 
                     G=NULL, h2=0.5, p=0.1, 
-                    nItersMacs=10, nItersTrt=5,
+                    nItersMacs=10, nItersTrt=5, trts=NULL,
                     verbose=TRUE){
-  
-  if(missing(gridEnvs)){stop("Please provide a grid of number of environments to test", call. = FALSE)}
-  if(missing(gridEnvs)){stop("Please provide a grid of number of individuals per environment to test", call. = FALSE)}
+  if(is.null(trts)){
+    if(missing(gridEnvs)){stop("Please provide a grid of number of environments to test", call. = FALSE)}
+    if(missing(gridEnvs)){stop("Please provide a grid of number of individuals per environment to test", call. = FALSE)}
+  }
   
   result <- list() # to store results
   counter <- 1
@@ -25,17 +26,13 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
       split = NULL,  ploidy = 2L,  returnCommand = FALSE,  nThreads = NULL
     )
     if(is.null(G)){
-      nEnvs=round(min(c(300,max(gridEnvs)*10))) # number of farms to comprise the TPE
+      nEnvs=500#round(min(c(300,max(gridEnvs)*10))) # number of farms to comprise the TPE
       G = simGECorMat0(nEnv =nEnvs,nMegaEnv = 1,mu=0.5, v=0.2); # we assume 1 cluster, mu.rg=0.3, sd.rg=0.54,  
       # hist(G[lower.tri(G)])
       # lattice::levelplot(G)
     }else{
       nEnvs <- ncol(G)
     }
-    
-    # warnings or controls
-    if(max(gridEnvs) > nEnvs){stop("The gridEnvs cannot include more environments than defined in G. Please correct", call. = FALSE)}
-    if(max(gridIndsPerEnv) > (nProgeny*nCrosses) ){stop("The gridIndsPerEnv cannot include more individuals than nCrosses x nProgeny. Please correct", call. = FALSE)}
     
     SP = SimParam$new(founderPop)
     
@@ -78,14 +75,29 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
     trueGV = apply(pop@gv,1,mean)
     names(trueGV) <- pop@id
     # define the treatments
-    trts <- expand.grid(gridEnvs, gridIndsPerEnv) # no.farms by no.inds 
-    trts$total <- trts$Var1*trts$Var2 # total number of plots needed
-    trts <- trts[ order(trts[,1], trts[,2]), ]
-    trts$available <- nInd(pop)
-    # add balanced designs
-    trts2 <- trts
-    trts2$available <- trts2$Var2
-    trts <- rbind(trts,trts2)
+    if(is.null(trts)){
+      trts <- expand.grid(gridEnvs, gridIndsPerEnv) # no.farms by no.inds 
+      colnames(trts) <- c("nFarms","nIndsPerFarm")
+      trts$total <- trts$nFarms*trts$nIndsPerFarm # total number of plots needed
+      trts <- trts[ order(trts[,1], trts[,2]), ]
+      trts$availableInds <- nInd(pop)
+      # add balanced designs
+      trts2 <- trts
+      trts2$availableInds <- trts2$nIndsPerFarm
+      trts <- rbind(trts,trts2)
+    }else{
+      if( ! all(colnames(trts) %in% c("nFarms","nIndsPerFarm","total", "availableInds")) ){
+        stop("Please make sure that your 'trts' argument has column names 'nFarms', 'nIndsPerFarm', 'total', 'availableInds'   ", call. = FALSE)
+      }
+      gridEnvs <- trts[,1]
+      gridIndsPerEnv <- trts[,2]
+    }
+    
+    # warnings or controls
+    if(max(gridEnvs) > nEnvs){stop("The gridEnvs cannot include more environments than defined in G. Please correct", call. = FALSE)}
+    if(max(gridIndsPerEnv) > (nProgeny*nCrosses) ){stop("The gridIndsPerEnv cannot include more individuals than nCrosses x nProgeny. Please correct", call. = FALSE)}
+    
+    
     trts <- trts[which(trts$total <= ub),]
     trts <- trts[which(trts$total >= lb),]
     
@@ -103,23 +115,22 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
         #################################################################
         #################################################################
         # EXPERIMENTAL DESIGN
-        # 1) extract the entry list and add the number of seed packets available
+        # 1) extract the entry list and add the number of seed packets availableInds
         
         sampledEnvs <- sampledEnvsList[[iTrt]]
         X <- Matrix(0, nrow=nrow(pop@gv), ncol=ncol(pop@gv)); rownames(X) <- pop@id
-        available <- sample(1:nrow(X), trts[iTrt,"available"])
+        availableInds <- sample(1:nrow(X), trts[iTrt,"availableInds"])
         for(iEnv in sampledEnvs){
-          picked <- sample(available,trts[iTrt,"Var2"] )
+          
+          picked <- sample(availableInds,trts[iTrt,"nIndsPerFarm"] )
           X[picked,iEnv] <- 1
-          # available <- setdiff(available, picked)
-          # if(length(available) < trts[iTrt,"Var2"]+5 ){
-          #   available <- 1:nrow(X)
-          # }
         } # Matrix::image(X)
         nIndsAcrossFarms <- length(which(apply(X,1,function(x){sum(x)}) > 0))
         
-        overlap <- (t(X[,sampledEnvs])%*%X[,sampledEnvs])/ trts[iTrt,"available"] # nrow(X)
-        overlapMu <- mean(overlap[lower.tri(overlap)])
+        overlap <- (t(X[,sampledEnvs])%*%X[,sampledEnvs])/ trts[iTrt,"availableInds"] # nrow(X)
+        if(nrow(overlap) > 1){
+          overlapMu <- mean(overlap[lower.tri(overlap)])
+        }else{overlapMu <- 1}
         sparsityMu <- 1 - overlapMu
         
         #################################################################
@@ -144,16 +155,21 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
           common <- intersect(names(trueGV) , rownames(sparseGV)) # currently sommer doesn't complete the matrix, I'll work on it
           rt <- cor(trueGV[common],sparseGV[common,])
           # calculate realized gain
-          expGain <- mean(sort(sparseGV, decreasing = TRUE)[1:(round(nInd(pop)*p))]) - mean(sparseGV)
+          sparseGV <- as.data.frame(sparseGV)
+          sparseGV <- sparseGV[with(sparseGV, order(-V1)),,drop=FALSE ]
+          
+          # sparseGV <- sparseGV[ order(sparseGV[,1] ), ]
+          
+          expGain <- mean( trueGV[ rownames(sparseGV)[1:(round(nInd(pop)*p))] ] ) - mean(trueGV)
           # popSel <- selectInd(pop, nInd = round(nInd(pop)*p), trait= function(Y,b){return(b)},  simParam = SP, b=sparseGV )
           # popS1 <- randCross(popSel, nCrosses = nCrosses, nProgeny = nProgeny)
           # realizedGain <- mean(apply(popS1@gv,1,mean)) - mean(trueGV)
           
         }else{rt <- expGain <- NA}
         # save results in new data.frame
-        result[[counter]] <- data.frame(accuracy=c(rt), expGain=expGain, nFarms=c(trts[iTrt,"Var1"]),
-                                        nIndsPerFarm=c(trts[iTrt,"Var2"]), nIndsAcrossFarms=nIndsAcrossFarms, 
-                                        nIndsAvail=trts[iTrt,"available"], overlapMu=overlapMu,
+        result[[counter]] <- data.frame(accuracy=c(rt), expGain=expGain, nFarms=c(trts[iTrt,"nFarms"]),
+                                        nIndsPerFarm=c(trts[iTrt,"nIndsPerFarm"]), nIndsAcrossFarms=nIndsAcrossFarms, 
+                                        nIndsAvail=trts[iTrt,"availableInds"], overlapMu=overlapMu,
                                         sparsityMu=sparsityMu,
                                         repTrt=iRep, repMacs=iMacs )
         counter <- counter+1
@@ -161,7 +177,7 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
       }
       
       if(verbose){
-        message(paste("Macs rep",iMacs,"with treatment",trts[iTrt,"Var1"], "envs and",trts[iTrt,"Var2"] ,"inds per env completed."))
+        message(paste("Macs rep",iMacs,"with treatment",trts[iTrt,"nFarms"], "envs and",trts[iTrt,"nIndsPerFarm"] ,"inds per env completed."))
       }
     }
     
@@ -178,7 +194,8 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
   final$overlapInds <- ( final$nIndsPerFarm / max(final$nIndsPerFarm) ) * 100
   final$sparsityInds <- 100 - final$overlapInds
   
-  final$relativeAccuracy <- final$accuracy/max(final$accuracy[which(final$accuracy == max(final$accuracy))])  # * 100
+  final$relativeAccuracy <- final$accuracy/mean(final$accuracy)  # * 100
+  final$relativeGain <- final$expGain/mean(final$expGain)  # * 100
   
   
   class(final) <- c(class(final),"sparsetMod")

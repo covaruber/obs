@@ -30,10 +30,13 @@ plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="
   }
   
   if(y=="accuracy"){myYlab <- "Accuracy [cor(true,estimated)]"}else if(y=="expGain"){myYlab <- "Expected genetic gain (accuracy and intensity relationship)"}else{myYlab <- y}
+  if(color=="overlapMu"){colorTitle<-"entry \noverlap"}else if(color=="sparsityMu"){colorTitle <- "entry \nsparsity"}else if(color=="nIndsAcrossFarms"){colorTitle <- "#entries \nacross \nfarms"}else{colorTitle <- color}
+  
   p <- p +  geom_point(position = position_jitter(seed = 1, width = 0.2), alpha=0.1) +
     scale_x_discrete(breaks=factor(object$trt), labels=object$trt) +
     facet_wrap(~nFarms, scales = "free_x") + #ylim(c(0,1)) +
     guides(x= guide_axis(angle=45), fill = guide_colourbar(barwidth = NULL, 
+                                                           title=colorTitle,
                                                            nbins=length(unique(object$colorBy)),
                                                            barheight = 25, title.position = "bottom", 
                                                            title.hjust = 0.5)) +
