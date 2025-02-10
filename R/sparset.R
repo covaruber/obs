@@ -62,9 +62,12 @@ sparset <- function(gridEnvs, gridIndsPerEnv, lb=0, ub=Inf,
     )
     
     pop = newPop(founderPop, simParam=SP) # 20 lines to start
-    pop = randCross2(pop,pop,nCrosses,1,simParam=SP) # pick 30 crosses and obtain F1 hybrids
-    pop <- self(pop,nProgeny,simParam=SP) # self each F1 and produce 10 F2 per cross
-    pop = makeDH(pop=pop,simParam=SP) # 300 DH lines
+    for(i in 1:10){ # n generations of random crossing to break original structure
+      pop = randCross(pop,nCrosses,nProgeny,simParam=SP) # pick 30 crosses and obtain F1 hybrids
+    }
+    
+    # pop <- self(pop,nProgeny,simParam=SP) # self each F1 and produce 10 F2 per cross
+    # pop = makeDH(pop=pop,simParam=SP) # 300 DH lines
     ###########$$$$$$$$$$$$$$$$$$$$
     ###########$$$$$$$$$$$$$$$$$$$$
     pop = setPheno(pop,H2=rep(h2,nEnvs),reps=1,simParam=SP) # produce phenotypes at low h2 independently of the trial size

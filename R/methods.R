@@ -41,7 +41,7 @@ plot.sparsetMod <- function(object, y="expGain", lb=0, ub=Inf, box=TRUE, color="
                                                            barheight = 25, title.position = "bottom", 
                                                            title.hjust = 0.5)) +
     geom_hline(yintercept=myYint, linetype='dashed', color=c('red')) +
-    xlab("#Inds available _ #Inds per farm _ #Plots total") + 
+    xlab("#Inds available in design _ #Inds grown per farm _ #Plots total") + 
     ylab(myYlab) +
     labs(fill = color ) +
     scale_fill_gradient(low="forestgreen", high="red") 
